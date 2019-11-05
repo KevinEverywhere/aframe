@@ -32,7 +32,7 @@ module.exports.setup = function setup (el, getCanvasSize) {
   // Setup Scene.
   loaderScene = new THREE.Scene();
   sphereGeometry = new THREE.SphereGeometry(0.20, 36, 18, 0, 2 * Math.PI, 0, Math.PI);
-  sphereMaterial = new THREE.MeshBasicMaterial({color: dotsColor});
+  sphereMaterial = new THREE.MeshBasicMaterial({ color: dotsColor });
   sphereMesh1 = new THREE.Mesh(sphereGeometry, sphereMaterial);
   sphereMesh2 = sphereMesh1.clone();
   sphereMesh3 = sphereMesh1.clone();
@@ -79,7 +79,7 @@ function resize (camera) {
   var size = getSceneCanvasSize(sceneEl.canvas, embedded, sceneEl.maxCanvasSize, sceneEl.is('vr-mode'));
   camera.aspect = size.width / size.height;
   camera.updateProjectionMatrix();
-   // Notify renderer of size change.
+  // Notify renderer of size change.
   sceneEl.renderer.setSize(size.width, size.height, false);
 }
 

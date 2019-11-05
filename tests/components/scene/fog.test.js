@@ -35,7 +35,7 @@ suite('fog', function () {
     test('updates fog', function () {
       var el = this.el;
       el.setAttribute('fog', 'color: #F0F');
-      assert.shallowDeepEqual(el.object3D.fog.color, {r: 1, g: 0, b: 1});
+      assert.shallowDeepEqual(el.object3D.fog.color, { r: 1, g: 0, b: 1 });
     });
 
     test('does not recreate fog when updating', function () {
