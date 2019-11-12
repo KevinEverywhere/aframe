@@ -138,13 +138,13 @@ function createDeviceMotionPermissionWindow (onClick, obj) {
   continueBtn = document.createElement('div');
   continueBtn.className = DEVICE_PERMISSION_CONTINUE_CLASS;
   continueBtn.setAttribute(constants.AFRAME_INJECTED, '');
-  aframeBuilt = document.createElement('div');
-  aframeBuilt.className = BUILT_WITH_AFRAME_CLASS;
-  aframeBuilt.setAttribute(constants.AFRAME_INJECTED, '');
+  // aframeBuilt = document.createElement('div');
+  // aframeBuilt.className = BUILT_WITH_AFRAME_CLASS;
+  // aframeBuilt.setAttribute(constants.AFRAME_INJECTED, '');
   // Insert elements.
   innerWrapper.appendChild(cancelBtn);
   innerWrapper.appendChild(continueBtn);
-  innerWrapper.appendChild(aframeBuilt);
+  // innerWrapper.appendChild(aframeBuilt);
   wrapper.appendChild(innerWrapper);
   continueBtn.addEventListener('click', function (evt) {
     onClick();
