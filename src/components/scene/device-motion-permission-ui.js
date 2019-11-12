@@ -16,6 +16,7 @@ var BUILT_WITH_AFRAME_CLASS = 'a-built-with-aframe';
 module.exports.Component = registerComponent('device-motion-permission-ui', {
   schema: {
     enabled: { default: true },
+    request: {default: {orientationChange:null, deviceOrientation:null}},
     deviceMotionEl: { default: '' }
   },
 
@@ -94,15 +95,22 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
   },
 
   grantedDeviceMotion: function () {
+    const orientationChange=this.el.getAttribute('orientation-change');
+    const deviceOrientation=this.el.getAttribute('device-orientation');
     this.remove();
-    const func = this.el.getAttribute('enableFunc')
-      ? this.el.getAttribute('enableFunc')
-      : '';
-    window.addEventListener('deviceorientation', e => {
-      func();
-    });
+      if(orientationChange){
+        window.addEventListener('orientationchange', e => {
+          window[orientationChange](e);
+        });
+      }
+      if(deviceOrientation){
+        window.addEventListener('deviceorientation', e => {
+          window[deviceOrientation](e);
+        });
+      }
+    }
   }
-});
+);
 
 /**
  * Create a button that when clicked will provide device motion permission.
