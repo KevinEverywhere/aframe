@@ -1,3 +1,4 @@
+/* global DeviceOrientationEvent  */
 var registerComponent = require('../../core/component').registerComponent;
 var utils = require('../../utils/');
 var bind = utils.bind;
@@ -6,9 +7,9 @@ var constants = require('../../constants/');
 
 var DEVICE_PERMISSION_FULL_CLASS = 'a-device-motion-permission-full';
 var DEVICE_PERMISSION_FULL_CENTER_CLASS = 'a-device-motion-permission-full-center';
-var DEVICE_PERMISSION_CONTINUE_CLASS = 'a-device-motion-permission-continue';
+var DEVICE_PERMISSION_ACCEPT_CLASS = 'a-device-motion-permission-accept';
 var DEVICE_PERMISSION_CANCEL_CLASS = 'a-device-motion-permission-cancel';
-var BUILT_WITH_AFRAME_CLASS = 'a-built-with-aframe';
+var DEVICE_PERMISSION_REQUEST_CLASS = 'a-device-permision-request';
 
 /**
  * UI for enabling device motion permission
@@ -16,10 +17,10 @@ var BUILT_WITH_AFRAME_CLASS = 'a-built-with-aframe';
 module.exports.Component = registerComponent('device-motion-permission-ui', {
   schema: {
     enabled: { default: true },
-    request: {default: {orientationChange:null, deviceOrientation:null}},
+    orientationChange: {default: null},
+    deviceOrientation: {default: null},
     deviceMotionEl: { default: '' }
   },
-
   init: function () {
     this.deviceMotionEl = null;
     this.onDeviceMotionClick = bind(this.onDeviceMotionClick, this);
@@ -27,7 +28,6 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
     this.grantedDeviceMotion = bind(this.grantedDeviceMotion, this);
     if (typeof window.orientation !== 'undefined') {
       try {
-        /*eslint-disable */
         if (
           DeviceOrientationEvent &&
           typeof DeviceOrientationEvent.requestPermission === 'function'
@@ -38,7 +38,6 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
                 this.grantedDeviceMotion();
               }
             })
-            /* eslint-enable */
             .catch(err => {
               console.log(err);
               this.deviceMotionEl = createDeviceMotionPermissionWindow(
@@ -69,7 +68,6 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
    */
   onDeviceMotionClick: function () {
     try {
-      /*eslint-disable */
       if (
         DeviceOrientationEvent &&
         typeof DeviceOrientationEvent.requestPermission === 'function'
@@ -83,7 +81,6 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
             }
           })
           .catch(console.error);
-          /* eslint-enable */
       } else {
         this.grantedDeviceMotion();
       }
@@ -122,8 +119,11 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
  */
 
 function createDeviceMotionPermissionWindow (onClick, obj) {
-  var wrapper, innerWrapper, aframeBuilt;
-  var cancelBtn, continueBtn;
+  var wrapper;
+  var innerWrapper;
+  var cancelButton;
+  var acceptButton;
+  var devicePermissionRequest;
 
   // Create elements.
   wrapper = document.createElement('div');
@@ -132,28 +132,30 @@ function createDeviceMotionPermissionWindow (onClick, obj) {
   innerWrapper = document.createElement('div');
   innerWrapper.className = DEVICE_PERMISSION_FULL_CENTER_CLASS;
   innerWrapper.setAttribute(constants.AFRAME_INJECTED, '');
-  cancelBtn = document.createElement('div');
-  cancelBtn.className = DEVICE_PERMISSION_CANCEL_CLASS;
-  cancelBtn.setAttribute(constants.AFRAME_INJECTED, '');
-  continueBtn = document.createElement('div');
-  continueBtn.className = DEVICE_PERMISSION_CONTINUE_CLASS;
-  continueBtn.setAttribute(constants.AFRAME_INJECTED, '');
-  // aframeBuilt = document.createElement('div');
-  // aframeBuilt.className = BUILT_WITH_AFRAME_CLASS;
-  // aframeBuilt.setAttribute(constants.AFRAME_INJECTED, '');
+  // cancelButton = document.createElement('div');
+  // cancelButton.className = DEVICE_PERMISSION_CANCEL_CLASS;
+  // cancelButton.setAttribute(constants.AFRAME_INJECTED, '');
+  // acceptButton = document.createElement('div');
+  // acceptButton.className = DEVICE_PERMISSION_ACCEPT_CLASS;
+  // acceptButton.setAttribute(constants.AFRAME_INJECTED, '');
+  devicePermissionRequest = document.createElement('div');
+  devicePermissionRequest.className = DEVICE_PERMISSION_REQUEST_CLASS;
+  devicePermissionRequest.setAttribute(constants.AFRAME_INJECTED, '');
   // Insert elements.
-  innerWrapper.appendChild(cancelBtn);
-  innerWrapper.appendChild(continueBtn);
-  // innerWrapper.appendChild(aframeBuilt);
+  // innerWrapper.appendChild(cancelButton);
+  // innerWrapper.appendChild(acceptButton);
+  innerWrapper.appendChild(devicePermissionRequest);
   wrapper.appendChild(innerWrapper);
-  continueBtn.addEventListener('click', function (evt) {
-    onClick();
-    obj.remove();
-    evt.stopPropagation();
-  });
-  cancelBtn.addEventListener('click', function (evt) {
-    obj.remove();
-    evt.stopPropagation();
-  });
+  // cancelButton = document.querySelector('#cancelButton');
+  // acceptButton = document.querySelector('#acceptButton');
+  // acceptButton.addEventListener('click', function (evt) {
+  //   onClick();
+  //   obj.remove();
+  //   evt.stopPropagation();
+  // });
+  // cancelButton.addEventListener('click', function (evt) {
+  //   obj.remove();
+  //   evt.stopPropagation();
+  // });
   return wrapper;
 }
