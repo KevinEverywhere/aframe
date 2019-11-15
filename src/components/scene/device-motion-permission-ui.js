@@ -65,7 +65,11 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
       }
     } else {
       // This is for desktop browsers and those who cancel or reject
-      this.remove();
+      if( this.isMobile() ){
+        alert('You appear to have a mobile device, but you may have requested a Desktop Website. Check the location bar of your browser and ensure you are requesting the Mobile Website.');
+      } else {
+        this.remove();
+      }
     }
   },
 
@@ -108,30 +112,36 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
       );
     }
   },
-
+  isMobile: function() {
+    return  /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  },
   grantedDeviceMotion: function () {
+    if (!this.isMobile()) {
+      alert('You appear to have a mobile device, but you may have requested a Desktop Website. Check the location bar of your browser and ensure you are requesting the Mobile Website.');
+    } else {
+      const orientationChange = this.el.getAttribute('orientation-change');
+      const deviceOrientation = this.el.getAttribute('device-orientation');
+      // The modal is removed if it is in place
+      this.remove();
+      // If an attribute orientation-change is included, it is passed as an
+      // event callback function
+      if (orientationChange) {
+        window.addEventListener('orientationchange', e => {
+          window[orientationChange](e);
+        });
+      }
+      // If an attribute device-orientation is included, it is passed as an
+      // event callback function
+      if (deviceOrientation) {
+        window.addEventListener('deviceorientation', e => {
+          window[deviceOrientation](e);
+        });
+      }
+    }
     // It is assumed that only mobile devices will call this
     // function. For iOS and iPad 13, they will first hit
     // DeviceOrientationEvent.requestPermission
     // These vars come from attributes and pass in function names from window
-    const orientationChange = this.el.getAttribute('orientation-change');
-    const deviceOrientation = this.el.getAttribute('device-orientation');
-    // The modal is removed if it is in place
-    this.remove();
-    // If an attribute orientation-change is included, it is passed as an
-    // event callback function
-    if (orientationChange) {
-      window.addEventListener('orientationchange', e => {
-        window[orientationChange](e);
-      });
-    }
-    // If an attribute device-orientation is included, it is passed as an
-    // event callback function
-    if (deviceOrientation) {
-      window.addEventListener('deviceorientation', e => {
-        window[deviceOrientation](e);
-      });
-    }
   }
 });
 
