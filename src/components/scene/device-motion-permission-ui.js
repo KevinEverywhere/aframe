@@ -45,6 +45,7 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
             // know that they will have to delete local cache to request
             // device motion event again, it should be put as else statement
             .catch(err => {
+              console.log(err);
               // This is included for ungranted permissions and is
               // unlikely to be used.
               this.deviceMotionEl = createDeviceMotionPermissionDialog(
@@ -113,20 +114,20 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
     // function. For iOS and iPad 13, they will first hit
     // DeviceOrientationEvent.requestPermission
     // These vars come from attributes and pass in function names from window
-    const orientationChange=this.el.getAttribute('orientation-change');
-    const deviceOrientation=this.el.getAttribute('device-orientation');
+    const orientationChange = this.el.getAttribute('orientation-change');
+    const deviceOrientation = this.el.getAttribute('device-orientation');
     // The modal is removed if it is in place
     this.remove();
     // If an attribute orientation-change is included, it is passed as an
     // event callback function
-    if(orientationChange){
+    if (orientationChange) {
       window.addEventListener('orientationchange', e => {
         window[orientationChange](e);
       });
     }
     // If an attribute device-orientation is included, it is passed as an
     // event callback function
-    if(deviceOrientation){
+    if (deviceOrientation) {
       window.addEventListener('deviceorientation', e => {
         window[deviceOrientation](e);
       });
@@ -144,7 +145,6 @@ module.exports.Component = registerComponent('device-motion-permission-ui', {
  */
 
 function createDeviceMotionPermissionDialog (onAcceptClicked, component) {
-
   var wrapper;
   var cancelButton;
   var acceptButton;
@@ -167,7 +167,7 @@ function createDeviceMotionPermissionDialog (onAcceptClicked, component) {
   devicePermissionRequest.appendChild(cancelButton);
   devicePermissionRequest.appendChild(acceptButton);
   wrapper.appendChild(devicePermissionRequest);
-  // Ask for sensor events to be used 
+  // Ask for sensor events to be used
   acceptButton.addEventListener('click', function (evt) {
     onAcceptClicked();
     component.remove();
